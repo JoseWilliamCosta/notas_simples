@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ nota.titulo }}</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+        }
+
+        .card {
+            background-color: #fff;
+            padding: 15px 20px;
+            border-radius: 8px;
+            width: 100%;
+            max-width: 800px;  /* largura máxima */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        img {
+            width: 100%;
+            height: auto;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+
+        h1 {
+            font-size: 1.5em;
+            margin-bottom: 10px;
+            color: #2980b9;
+        }
+
+        p {
+            font-size: 0.95em;
+            margin: 5px 0;
+            line-height: 1.4;
+        }
+
+        a {
+            text-decoration: none;
+            color: #2980b9;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="card">
+        <h1>{{ notas.titulo }}</h1>
+
+        {% if notas.imagem %}
+        <img src="{{ notas.imagem.url }}" alt="Imagem da nota">
+        {% endif %}
+
+        <p>{{ notas.descricao }}</p>
+
+        {% if notas.arquivo %}
+        <p><a href="{{ notas.arquivo.url }}" target="_blank">📎 Baixar arquivo</a></p>
+        {% endif %}
+
+        <p><strong>Categoria:</strong> {{ notas.categoria }}</p>
+        <p><strong>Criado por:</strong> Usuario</p>
+        <p><em>Publicado em: {{ notas.data_publicacao }}</em></p>
+
+        <p><a href="{% url 'index' %}">Voltar ao mural</a></p>
+    </div>
+</body>
+
+</html>

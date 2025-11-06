@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Notas Públicas</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f5f5f5;
+      margin: 20px;
+      color: #333;
+    }
+
+    h1 {
+      text-align: center;
+      color: #2c3e50;
+      margin-bottom: 30px;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+      justify-content: center;
+    }
+
+    li {
+      background-color: #fff;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      width: 250px;
+      padding: 15px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      display: flex;
+      flex-direction: column;
+    }
+
+    li h3 {
+      margin: 5px 0;
+      font-size: 1.1em;
+      color: #2980b9;
+    }
+
+    li img {
+      max-width: 100%;
+      height: 120px;
+      object-fit: cover;
+      border-radius: 5px;
+      margin-bottom: 10px;
+    }
+
+    li p {
+      font-size: 0.85em;
+      margin: 3px 0;
+      color: #555;
+    }
+
+    .arquivo-link {
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>📰 Últimas Notas</h1>
+  <div id="conteudo">
+    <p>Carregando notas...</p>
+  </div>
+
+  <script>
+    const API_URL = "https://comparable-eliza-consentingly.ngrok-free.dev/api/notas/"; // ← use o endereço local do Django
+    const BASE_URL = "https://comparable-eliza-consentingly.ngrok-free.dev/"; // para completar links de imagem/arquivo
+
+    async function carregarNotas() {
+      try {
+        const resposta = await fetch(API_URL);
+        if (!resposta.ok) throw new Error("Erro ao carregar API");
+        const notas = await resposta.json();
+
+        if (notas.length === 0) {
+          document.getElementById("conteudo").innerHTML = "<p>Não há notas cadastradas ainda.</p>";
+          return;
+        }
+
+        const lista = document.createElement("ul");
+
+        notas.forEach(nota => {
+          const li = document.createElement("li");
+
+          const titulo = `<h3>${nota.titulo}</h3>`;
+          const imagem = nota.imagem ? `<img src="${BASE_URL}${nota.imagem}" alt="Imagem da nota">` : "";
+          const descricao = `<p>${nota.descricao.substring(0, 100)}...</p>`;
+          const categoria = `<p><strong>Categoria:</strong> ${nota.categoria}</p>`;
+          const data = `<p><em>Publicado em: ${new Date(nota.data_publicacao).toLocaleDateString()}</em></p>`;
+          const arquivo = nota.arquivo ? `<p class="arquivo-link"><a href="${BASE_URL}${nota.arquivo}" target="_blank">📎 Baixar arquivo</a></p>` : "";
+
+          li.innerHTML = `${titulo}${imagem}${descricao}${categoria}${arquivo}${data}`;
+          lista.appendChild(li);
+        });
+
+        document.getElementById("conteudo").innerHTML = "";
+        document.getElementById("conteudo").appendChild(lista);
+
+      } catch (erro) {
+        console.error("Erro:", erro);
+        document.getElementById("conteudo").innerHTML = `<p style="color:red;">Erro ao carregar as notas: ${erro.message}</p>`;
+      }
+    }
+
+    carregarNotas();
+  </script>
+</body>
+</html>

@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notas</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            margin: 20px;
+            color: #333;
+        }
+
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 30px;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        li {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            width: 250px;
+            padding: 15px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+        }
+
+        li h3 {
+            margin: 5px 0;
+            font-size: 1.1em;
+            color: #2980b9;
+        }
+
+        li img {
+            max-width: 100%;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+
+        li p {
+            font-size: 0.85em;
+            margin: 3px 0;
+            color: #555;
+        }
+
+        li a {
+            font-size: 0.85em;
+            color: #2980b9;
+            text-decoration: none;
+            margin-right: 5px;
+        }
+
+        .button{
+            font-size: 0.85em;
+            color: #000000;
+            text-decoration: none;
+            margin-right: 5px;
+            background-color: greenyellow;
+            padding: 10px;
+            border-radius: 8px;
+        }
+
+        li a:hover {
+            text-decoration: underline;
+        }
+
+        .arquivo-link {
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>ÚLTIMAS NOTÍCIAS</h1>
+    <div>
+        {% block content %}
+            {% if notas %}
+                <ul>
+                    {% for nota in notas %}
+                        <li>
+                            <h3>{{ nota.titulo }}</h3>
+                            {% if nota.imagem %}
+                                <img src="{{ nota.imagem.url }}" alt="Imagem da nota">
+                            {% endif %}
+                            <p id="completo-{{ nota.id }}">
+                                {{ nota.descricao|truncatechars:100 }}
+                            </p>
+                            
+                            {% if nota.arquivo %}
+                                <p class="arquivo-link"><a href="{{ nota.arquivo.url }}" target="_blank">📎 Baixar arquivo</a></p>
+                            {% endif %}
+                            <p><strong>Categoria:</strong> {{ nota.categoria }}</p>
+                            <p><strong>Criado por:</strong> Ususario</p>
+                            <p><em>Publicado em: {{ nota.data_publicacao }}</em></p>
+                            <div class="Flex">
+                            <a href="{% url 'editar_nota' nota.id %}">Editar</a>
+                            <a href="{% url 'excluir_nota' nota.id %}">Excluir</a>
+                            <a href="{% url 'nota' nota.id %}">Visualizar</a></div>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>Não há notas cadastradas ainda.</p>
+                
+            {% endif %}
+            <a class="button" href="{% url 'criar_nota' %}">Criar Nota</a>
+        {% endblock %}
+    </div>
+    
+</body>
+</html>
